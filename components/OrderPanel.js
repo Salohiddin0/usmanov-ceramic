@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Pic from './Pic';
-import { dec, fmt, pcs, pname, size, tgLink } from '@/lib/format';
+import { dec, fmt, pcs, pname, size, tgLink, tonPrice, usd } from '@/lib/format';
 import { track } from '@/lib/track';
 
 // Mahsulot tafsiloti + tonna tanlash + Telegram'ga yuborish
@@ -16,6 +16,7 @@ export default function OrderPanel({ p, lang, t, tg, catName, titleId, heading =
   const n = pcs(p, tons);
   const msg = t.msg_o
     .replace('{p}', `${name} (${sz})`)
+    .replace('{price}', usd(p.price, lang))
     .replace('{t}', dec(tons, lang))
     .replace('{n}', fmt(n).replace(/ /g, ' '));
   const send = tgLink(tg, msg);
@@ -37,14 +38,31 @@ export default function OrderPanel({ p, lang, t, tg, catName, titleId, heading =
         <dl>
           <dt>{t.m_price}</dt>
           <dd>
-            {fmt(p.price)} {t.cur} {t.perT}
+            {usd(p.price, lang)} $ {t.per_pc}
           </dd>
-          <dt>{t.m_size}</dt>
-          <dd>{sz}</dd>
-          <dt>{t.m_w}</dt>
-          <dd>
-            {dec(p.w, lang)} {t.kg}
-          </dd>
+          <dt>{t.ton_price}</dt>
+          <dd>≈ {fmt(tonPrice(p))} $</dd>
+          {sz && (
+            <>
+              <dt>{t.m_size}</dt>
+              <dd>{sz}</dd>
+            </>
+          )}
+          {p.box_qty > 0 && p.box_kg > 0 ? (
+            <>
+              <dt>{t.box}</dt>
+              <dd>
+                {p.box_qty} {t.pcs_word} · {dec(p.box_kg, lang)} {t.kg}
+              </dd>
+            </>
+          ) : (
+            <>
+              <dt>{t.m_w}</dt>
+              <dd>
+                {dec(Math.round(p.w * 100) / 100, lang)} {t.kg}
+              </dd>
+            </>
+          )}
         </dl>
         <label htmlFor={inputId}>{t.m_vol}</label>
         <div className="tv" aria-live="polite">
@@ -67,7 +85,7 @@ export default function OrderPanel({ p, lang, t, tg, catName, titleId, heading =
           <div>
             <span>{t.m_sum}</span>
             <b>
-              ≈ {fmt(p.price * tons)} {t.cur}
+              ≈ {fmt(tonPrice(p) * tons)} $
             </b>
           </div>
         </div>

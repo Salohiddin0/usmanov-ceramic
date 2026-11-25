@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import Pic from './Pic';
-import { fmt, pcs, pname, size } from '@/lib/format';
+import { fmt, pcs, pname, size, tonPrice, usd } from '@/lib/format';
 
 export const openOrder = (p) => window.dispatchEvent(new CustomEvent('uc:open', { detail: p }));
 
@@ -18,10 +18,10 @@ export default function ProductCard({ p, lang, t }) {
         </h4>
         <p className="sz">{size(p, t, lang)}</p>
         <p className="pr">
-          <b>
-            {fmt(p.price)} {t.cur}
-          </b>{' '}
-          {t.perT}
+          <b>{usd(p.price, lang)} $</b> {t.per_pc}
+        </p>
+        <p className="sz">
+          ≈ {fmt(tonPrice(p))} $ {t.perT}
         </p>
         <p className="pcs">{t.pcs.replace('{n}', fmt(pcs(p, 1)))}</p>
         <button className="btn sm" onClick={() => openOrder(p)}>

@@ -14,9 +14,12 @@ create table if not exists public.products (
   name_uz     text not null,
   name_ru     text not null default '',
   name_en     text not null default '',
-  price       bigint not null default 0 check (price >= 0),        -- so'm, 1 tonna uchun
-  weight      numeric not null default 1 check (weight > 0),        -- 1 dona og'irligi, kg
-  size        numeric not null default 0 check (size >= 0),         -- sm / litr / predmet soni
+  price       numeric(12,2) not null default 0 check (price >= 0), -- $, 1 dona uchun
+  box_qty     integer not null default 0,                           -- qutidagi dona soni
+  box_kg      numeric not null default 0,                           -- quti og'irligi (brutto), kg
+  weight      numeric not null default 1 check (weight > 0),        -- 1 dona og'irligi, kg (brutto / dona)
+  size        numeric not null default 0 check (size >= 0),
+  size_label  jsonb not null default '{}'::jsonb,                   -- o'lcham 3 tilda: {"uz":"42 sm",...}
   pattern     integer not null default 0 check (pattern between 0 and 4),
   img         text not null default '',
   active      boolean not null default true,

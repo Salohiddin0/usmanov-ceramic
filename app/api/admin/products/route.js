@@ -30,17 +30,24 @@ export async function POST(req) {
   } catch {
     return jsonError("Noto'g'ri so'rov");
   }
+  const boxQty = Math.round(num(b?.box_qty, 0, 100000, 0));
+  const boxKg = num(b?.box_kg, 0, 10000, 0);
+  const sl = b?.size_label && typeof b.size_label === 'object' ? b.size_label : {};
   const row = {
     cat: CATS.some((c) => c.id === b?.cat) ? b.cat : null,
     name_uz: str(b?.name_uz, 120),
     name_ru: str(b?.name_ru, 120),
     name_en: str(b?.name_en, 120),
-    price: Math.round(num(b?.price, 0, 1e13, 0)),
-    weight: num(b?.weight, 0.001, 1000, 1),
+    price: Math.round(num(b?.price, 0, 1e7, 0) * 100) / 100, // $ / 1 dona
+    box_qty: boxQty,
+    box_kg: boxKg,
+    // 1 dona og'irligi (qadog'i bilan) = brutto / qutidagi soni
+    weight: boxQty > 0 && boxKg > 0 ? Math.round((boxKg / boxQty) * 10000) / 10000 : num(b?.weight, 0.001, 1000, 1),
     size: num(b?.size, 0, 100000, 0),
+    size_label: { uz: str(sl.uz, 60), ru: str(sl.ru, 60), en: str(sl.en, 60) },
     pattern: Math.round(num(b?.pattern, 0, 4, 0)),
     sort: Math.round(num(b?.sort, -100000, 100000, 0)),
-    img: typeof b?.img === 'string' && /^https:\/\//.test(b.img) ? b.img.slice(0, 600) : '',
+    img: typeof b?.img === 'string' && (/^https:\/\//.test(b.img) || /^\/products\/[\w.-]+$/.test(b.img)) ? b.img.slice(0, 600) : '',
     active: b?.active !== false,
   };
   if (!row.cat) return jsonError("Katalog noto'g'ri");

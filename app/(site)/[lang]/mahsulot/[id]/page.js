@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { T } from '@/lib/i18n';
 import { getProduct, getProducts, getSettings } from '@/lib/data';
-import { catName, catOf, fmt, pname, safeImg, size } from '@/lib/format';
+import { catName, catOf, pname, safeImg, size, usd } from '@/lib/format';
 import { ld, siteUrl } from '@/lib/site';
 import OrderPanel from '@/components/OrderPanel';
 import ProductCard from '@/components/ProductCard';
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }) {
   const img = safeImg(p.img);
   return {
     title: `${name} ${t.opt}`,
-    description: `${name}, ${size(p, t, lang)}. ${fmt(p.price).replace(/ /g, ' ')} ${t.cur} ${t.perT}. ${t.cat_s}`,
+    description: `${name}, ${size(p, t, lang)}. ${usd(p.price, lang)} $ ${t.per_pc}. ${t.cat_s}`,
     alternates: { canonical: `/${lang}/mahsulot/${id}`, languages: { uz: `/uz/mahsulot/${id}`, ru: `/ru/mahsulot/${id}`, en: `/en/mahsulot/${id}` } },
     openGraph: img ? { images: [{ url: img }] } : undefined,
   };
