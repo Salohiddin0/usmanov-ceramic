@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Logo from './Logo';
+import CartButton, { CartIcon } from './CartButton';
+import { openCart } from '@/lib/cart';
 import { LANGS } from '@/lib/i18n';
 import { tgLink, waLink } from '@/lib/format';
 import { toggleTheme, trackVisit } from '@/lib/track';
@@ -85,6 +87,7 @@ export default function Header({ lang, t, site, cats }) {
             <button className="ico" onClick={toggleTheme} aria-label="Dark / light">
               <Moon />
             </button>
+            <CartButton label={t.cart} />
             {tg && (
               <a className="btn sm pri" href={tg} target="_blank" rel="noopener">
                 {t.tg}
@@ -113,6 +116,19 @@ export default function Header({ lang, t, site, cats }) {
               <a href={`/${lang}`} onClick={close}>
                 {t.home}
               </a>
+              <button
+                type="button"
+                onClick={() => {
+                  close();
+                  openCart();
+                }}
+                style={{ display: 'flex', alignItems: 'center', gap: 10 }}
+              >
+                <span style={{ width: 22, height: 22, display: 'inline-grid' }}>
+                  <CartIcon />
+                </span>
+                {t.cart}
+              </button>
               <a href={`/${lang}#katalog`} onClick={close}>
                 {t.nav_cat}
               </a>

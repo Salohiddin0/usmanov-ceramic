@@ -98,11 +98,11 @@ export default function StatsTab() {
   const conv = vA ? Math.round((qA / vA) * 1000) / 10 : 0;
   const bk = c.buckets || {};
   const buckets = [
-    ['0,5–2 T', bk.a],
-    ['2,5–5 T', bk.b],
-    ['5,5–10 T', bk.c],
-    ['10,5–22 T', bk.d],
-    ["22 T dan ko'p", bk.e],
+    ['10–50 dona', bk.a],
+    ['51–100 dona', bk.b],
+    ['101–300 dona', bk.c],
+    ['301–1 000 dona', bk.d],
+    ["1 000 dan ko'p", bk.e],
   ].filter((r) => Number(r[1]) > 0);
   const showLabel = (i) => days.length <= 14 || i % Math.ceil(days.length / 10) === 0 || i === days.length - 1;
 
@@ -129,8 +129,8 @@ export default function StatsTab() {
           <small className="flat">konversiya {String(conv).replace('.', ',')}%</small>
         </div>
         <div className="kpi">
-          <span>So&apos;ralgan hajm</span>
-          <b>{dec1(c.tons)} T</b>
+          <span>So&apos;ralgan miqdor</span>
+          <b>{fmt(c.tons)} dona</b>
           <small className="flat">{fmt(qA)} ta so&apos;rov</small>
         </div>
       </div>
@@ -170,11 +170,11 @@ export default function StatsTab() {
           <Bars rows={(c.top_view || []).map((x) => [nm(x.id), x.n])} />
         </div>
         <div className="panel">
-          <h4>Katalog bo&apos;yicha so&apos;ralgan hajm</h4>
-          <Bars rows={(c.by_cat || []).map((x) => [catN[x.cat] || x.cat, Number(x.t)])} unit="T" />
+          <h4>Katalog bo&apos;yicha so&apos;ralgan dona</h4>
+          <Bars rows={(c.by_cat || []).map((x) => [catN[x.cat] || x.cat, Number(x.t)])} />
         </div>
         <div className="panel">
-          <h4>Buyurtma hajmi taqsimoti</h4>
+          <h4>Buyurtma miqdori taqsimoti (dona)</h4>
           <Bars rows={buckets.map((r) => [r[0], Number(r[1])])} />
         </div>
         <div className="panel w">
@@ -186,7 +186,7 @@ export default function StatsTab() {
                   <tr>
                     <th>Sana</th>
                     <th>Mahsulot</th>
-                    <th style={{ textAlign: 'right' }}>Hajm</th>
+                    <th style={{ textAlign: 'right' }}>Soni</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -196,7 +196,7 @@ export default function StatsTab() {
                       <tr key={i}>
                         <td>{t.toLocaleString('ru-RU', { timeZone: 'Asia/Tashkent', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</td>
                         <td>{nm(r.id)}</td>
-                        <td className="n">{Number(r.t) > 22 ? '22+ T' : `${dec1(r.t)} T`}</td>
+                        <td className="n">{Number(r.t) > 1000 ? '1 000+ dona' : `${fmt(r.t)} dona`}</td>
                       </tr>
                     );
                   })}

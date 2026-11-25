@@ -20,8 +20,9 @@ export async function POST(req) {
   if (type !== 'visit' && !isUuid(pid)) return bad();
   let t = 0;
   if (type === 'tg') {
-    t = Number(tons);
-    if (!Number.isFinite(t) || t < 0.5 || t > 100) return bad();
+    // tons maydonida endi dona soni yoziladi (1 001 = "1 000 dan ko'p")
+    t = Math.round(Number(tons));
+    if (!Number.isFinite(t) || t < 1 || t > 100000) return bad();
   }
   const { error } = await sb()
     .from('events')

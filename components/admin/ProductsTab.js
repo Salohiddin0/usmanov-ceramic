@@ -8,7 +8,6 @@ import { fmt, usd } from '@/lib/format';
 
 const empty = (cat, sort) => ({ cat, name_uz: '', name_ru: '', name_en: '', price: '', box_qty: '', box_kg: '', size_label: { uz: '', ru: '', en: '' }, pattern: 0, img: '', active: true, sort });
 const perPiece = (p) => (Number(p.box_qty) > 0 && Number(p.box_kg) > 0 ? Number(p.box_kg) / Number(p.box_qty) : Number(p.weight) || 0);
-const perTon = (p) => (perPiece(p) > 0 ? 1000 / perPiece(p) : 0);
 
 function Thumb({ p }) {
   if (p.img) return <img src={p.img} alt="" />;
@@ -145,9 +144,9 @@ export default function ProductsTab() {
               </div>
             ))}
             <div className="full hint">
-              {perTon(edit) > 0
-                ? `1 dona ≈ ${perPiece(edit).toFixed(2)} kg · 1 tonnada ≈ ${fmt(perTon(edit))} dona · 1 tonna narxi ≈ ${fmt(perTon(edit) * (Number(edit.price) || 0))} $`
-                : "Narx, qutidagi soni va brutto kiritilsa, 1 tonna narxi shu yerda hisoblanadi."}
+              {perPiece(edit) > 0
+                ? `1 dona ≈ ${perPiece(edit).toFixed(2)} kg (qadog'i bilan). Mijoz 10 dan 1 000 donagacha oladi, butun buyurtma kamida 500 kg bo'lishi kerak.`
+                : "Qutidagi soni va brutto kiritilsa, 1 donaning og'irligi shu yerda hisoblanadi."}
             </div>
             <div>
               <label htmlFor="pf-o">Tartib raqami (kichigi oldin)</label>
@@ -198,7 +197,7 @@ export default function ProductsTab() {
                 <th>Katalog</th>
                 <th style={{ textAlign: 'right' }}>$ / dona</th>
                 <th style={{ textAlign: 'right' }}>Qutida</th>
-                <th style={{ textAlign: 'right' }}>≈ $ / T</th>
+                <th style={{ textAlign: 'right' }}>1 dona ≈ kg</th>
                 <th>Saytda</th>
                 <th />
               </tr>
@@ -233,7 +232,7 @@ export default function ProductsTab() {
                   <td className="n">
                     {p.box_qty || '—'} · {p.box_kg || '—'} kg
                   </td>
-                  <td className="n">{fmt(perTon(p) * (Number(p.price) || 0))}</td>
+                  <td className="n">{perPiece(p) ? perPiece(p).toFixed(2) : '—'}</td>
                   <td>
                     <input type="checkbox" checked={p.active} onChange={() => toggle(p)} aria-label="Saytda ko'rsatish" style={{ width: 22, height: 22 }} />
                   </td>

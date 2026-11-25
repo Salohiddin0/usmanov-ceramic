@@ -1,29 +1,29 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Pic from './Pic';
-import { dec, fmt, pcs, pname, size, tgLink, tonPrice, usd } from '@/lib/format';
+import QtyInput from './QtyInput';
+import { dec, fmt, pname, size, tgLink, usd } from '@/lib/format';
+import { MAX_Q, MIN_Q, addToCart, openCart } from '@/lib/cart';
 import { track } from '@/lib/track';
 
-// Mahsulot tafsiloti + tonna tanlash + Telegram'ga yuborish
+// Mahsulot tafsiloti + dona tanlash + savatga qo'shish
 export default function OrderPanel({ p, lang, t, tg, catName, titleId, heading = 'h3' }) {
-  const [tons, setTons] = useState(1);
+  const [qty, setQty] = useState(MIN_Q);
+  const [added, setAdded] = useState(false);
   useEffect(() => {
     track('view', p.id);
   }, [p.id]);
 
   const name = pname(p, lang);
   const sz = size(p, t, lang);
-  const n = pcs(p, tons);
-  const msg = t.msg_o
-    .replace('{p}', `${name} (${sz})`)
-    .replace('{price}', usd(p.price, lang))
-    .replace('{t}', dec(tons, lang))
-    .replace('{n}', fmt(n).replace(/ /g, ' '));
-  const send = tgLink(tg, msg);
   const more = tgLink(tg, t.msg_m.replace('{p}', name));
   const H = heading;
-  const inputId = `tons-${p.id}`;
-  const step = (d) => setTons((x) => Math.min(22, Math.max(0.5, Math.round((x + d) * 2) / 2)));
+  const inputId = `qty-${p.id}`;
+
+  function add() {
+    addToCart(p, qty);
+    setAdded(true);
+  }
 
   return (
     <>
@@ -40,8 +40,6 @@ export default function OrderPanel({ p, lang, t, tg, catName, titleId, heading =
           <dd>
             {usd(p.price, lang)} $ {t.per_pc}
           </dd>
-          <dt>{t.ton_price}</dt>
-          <dd>≈ {fmt(tonPrice(p))} $</dd>
           {sz && (
             <>
               <dt>{t.m_size}</dt>
@@ -65,40 +63,46 @@ export default function OrderPanel({ p, lang, t, tg, catName, titleId, heading =
           )}
         </dl>
         <label htmlFor={inputId}>{t.m_vol}</label>
-        <div className="tv" aria-live="polite">
-          {dec(tons, lang)} {t.T}
-        </div>
-        <div className="stp">
-          <button type="button" onClick={() => step(-0.5)} aria-label="−0.5">
-            −
-          </button>
-          <input id={inputId} type="range" min="0.5" max="22" step="0.5" value={tons} onChange={(e) => setTons(Number(e.target.value))} />
-          <button type="button" onClick={() => step(0.5)} aria-label="+0.5">
-            +
-          </button>
-        </div>
+        <QtyInput
+          id={inputId}
+          label={t.m_vol}
+          value={qty}
+          onChange={(q) => {
+            setQty(q);
+            setAdded(false);
+          }}
+        />
+        <p className="hint" style={{ marginTop: -4 }}>
+          {t.qty_hint.replace('{min}', MIN_Q).replace('{max}', fmt(MAX_Q))}
+        </p>
         <div className="calc">
           <div>
-            <span>{t.m_pcs}</span>
-            <b>≈ {fmt(n)}</b>
+            <span>{t.m_sum}</span>
+            <b>≈ {fmt(qty * p.price)} $</b>
           </div>
           <div>
-            <span>{t.m_sum}</span>
+            <span>{t.m_kg}</span>
             <b>
-              ≈ {fmt(tonPrice(p) * tons)} $
+              ≈ {dec(Math.round(qty * p.w * 10) / 10, lang)} {t.kg}
             </b>
           </div>
         </div>
-        {send ? (
-          <>
-            <a className="btn pri" href={send} target="_blank" rel="noopener" onClick={() => track('tg', p.id, tons)}>
-              {t.m_send}
-            </a>
-            <a className="more" href={more} target="_blank" rel="noopener" onClick={() => track('tg', p.id, 22.5)}>
-              {t.m_more}
-            </a>
-          </>
-        ) : null}
+        <button type="button" className="btn pri" onClick={add}>
+          {t.add_cart}
+        </button>
+        {added && (
+          <div className="added" role="status">
+            <span>✓ {t.added}</span>
+            <button type="button" className="btn sm" onClick={openCart}>
+              {t.go_cart} →
+            </button>
+          </div>
+        )}
+        {more && (
+          <a className="more" href={more} target="_blank" rel="noopener" onClick={() => track('tg', p.id, MAX_Q + 1)}>
+            {t.m_more}
+          </a>
+        )}
         <p className="hint">{t.m_note}</p>
       </div>
     </>

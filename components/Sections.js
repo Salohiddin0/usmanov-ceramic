@@ -30,15 +30,15 @@ export function Hero({ t, hero, tg }) {
         </div>
         <div className="figs">
           <div>
-            <b>0,5 T</b>
+            <b>10</b>
             <span>{t.f1}</span>
           </div>
           <div>
-            <b>22 T</b>
+            <b>1 000</b>
             <span>{t.f2}</span>
           </div>
           <div>
-            <b>22 T+</b>
+            <b>500 kg</b>
             <span>{t.f3}</span>
           </div>
         </div>

@@ -273,3 +273,37 @@ header nav a{padding:10px 14px;border-radius:10px;font-weight:700;text-decoratio
 header nav a:hover{background:color-mix(in srgb,currentColor 10%,transparent)}
 .seg a{padding:6px 10px;border-radius:9px;font-weight:800;font-size:13px;min-width:38px;min-height:34px;text-decoration:none;display:grid;place-items:center}
 .seg a[aria-current=true]{background:var(--pri);color:#fff}
+/* --- Savat va dona tanlash --- */
+.qty{display:grid;grid-template-columns:48px minmax(0,1fr) 48px;gap:8px;align-items:center;max-width:280px}
+.qty button{height:46px;border-radius:12px;border:1px solid var(--line);background:var(--alt);font-size:22px;cursor:pointer;font-weight:700}
+.qty button:disabled{opacity:.4;cursor:not-allowed}
+.qty input{text-align:center;font-weight:800;font-size:18px;height:46px;padding:0 6px}
+.added{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:color-mix(in srgb,var(--tur) 14%,transparent);border:1px solid color-mix(in srgb,var(--tur) 40%,transparent);border-radius:14px;padding:10px 12px;font-weight:700;color:var(--tur)}
+.cartbtn{position:relative}
+.cbadge{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:var(--amb);color:#1a1100;font-size:12px;font-weight:800;display:grid;place-items:center;line-height:1}
+.cartfab{position:fixed;right:max(16px,2vw);bottom:20px;z-index:34;width:60px;height:60px;border-radius:20px;border:0;background:var(--pri);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 14px 30px -10px #000a}
+.cartfab svg{width:26px;height:26px}
+.cartfab .cbadge{top:-6px;right:-6px}
+.cartbtn svg{width:20px;height:20px}
+.drawer.cartd{z-index:80}
+.cartd .dp{width:min(460px,100%)}
+.clist{display:flex;flex-direction:column;gap:12px}
+.ci{display:grid;grid-template-columns:76px minmax(0,1fr);gap:12px;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--card)}
+.ci-img{width:76px;height:76px;border-radius:12px;overflow:hidden;background:light-dark(#f6f3ec,#1a2438)}
+.ci-img img,.ci-img svg{width:100%;height:100%;object-fit:cover}
+.ci-body{display:flex;flex-direction:column;gap:6px}
+.ci-body b{line-height:1.25}
+.ci-body .qty{grid-template-columns:40px minmax(0,1fr) 40px;max-width:200px}
+.ci-body .qty button,.ci-body .qty input{height:38px;font-size:16px}
+.ci-foot{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.ci-del{margin-left:auto;background:none;border:0;color:#d93025;font-weight:700;cursor:pointer;min-height:36px}
+.ctot{border-top:1px solid var(--line);padding-top:12px;display:grid;gap:6px}
+.ctot>div:not(.kgbar){display:flex;justify-content:space-between;gap:10px}
+.ctot span{color:var(--mut)}
+.ctot b{white-space:nowrap}
+.kgbar{height:10px;border-radius:6px;background:var(--alt);overflow:hidden}
+.kgbar i{display:block;height:100%;background:var(--amb);border-radius:6px;transition:width .25s}
+.kgbar i.ok{background:var(--tur)}
+.warnbox{background:light-dark(#fff1ec,#2a1712);border:1px solid light-dark(#f3b6a2,#6b2e1d);color:light-dark(#9b2c12,#ffb59c);border-radius:14px;padding:12px 14px;font-size:14px;font-weight:600;margin:0}
+a.btn[aria-disabled=true]{opacity:.45;cursor:not-allowed;filter:grayscale(.4);transform:none}
+.dp nav button{display:flex}

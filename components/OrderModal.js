@@ -8,8 +8,13 @@ export default function OrderModal({ lang, t, tg, catNames }) {
 
   useEffect(() => {
     const onOpen = (e) => setP(e.detail);
+    const onClose = () => setP(null);
     window.addEventListener('uc:open', onOpen);
-    return () => window.removeEventListener('uc:open', onOpen);
+    window.addEventListener('uc:close-order', onClose);
+    return () => {
+      window.removeEventListener('uc:open', onOpen);
+      window.removeEventListener('uc:close-order', onClose);
+    };
   }, []);
 
   useEffect(() => {

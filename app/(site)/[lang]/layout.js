@@ -8,6 +8,8 @@ import { THEME_JS, metadataBase } from '@/lib/site';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import OrderModal from '@/components/OrderModal';
+import CartDrawer from '@/components/CartDrawer';
+import CartButton from '@/components/CartButton';
 
 export const revalidate = 300;
 
@@ -49,6 +51,8 @@ export default async function SiteLayout({ children, params }) {
         {children}
         <Footer lang={lang} t={t} site={s.site} cats={cats} />
         <OrderModal lang={lang} t={t} tg={s.site.tg} catNames={catNames} />
+        <CartDrawer lang={lang} t={t} tg={s.site.tg} />
+        <CartButton label={t.cart} variant="fab" />
       </body>
     </html>
   );
